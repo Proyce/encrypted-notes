@@ -1,7 +1,8 @@
-export interface NoteHistory {
+export interface NoteVersion {
   version: number;
+  title: string;
   content: string;
-  updatedAt: Date;
+  createdAt: Date;
 }
 
 export interface Note {
@@ -11,5 +12,5 @@ export interface Note {
   createdAt: Date;
   updatedAt: Date;
   version: number;
-  history: NoteHistory[];
+  history: NoteVersion[];
 }
