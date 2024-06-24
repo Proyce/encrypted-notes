@@ -1,1 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+.card-header {
+  background-color: #f8f9fa;
+}
+
+.card-body {
+  background-color: #ffffff;
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+}

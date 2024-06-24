@@ -1,0 +1,11 @@
+.notes-list-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.notes-list {
+  max-width: 600px;
+  width: 100%;
+}
