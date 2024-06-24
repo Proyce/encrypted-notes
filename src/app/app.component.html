@@ -2,15 +2,17 @@
   <nav class="navbar bg-light">
     <div class="container">
       <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search notes" style="width: 400px;">
+        <input class="form-control me-2" type="search" placeholder="Search" style="width: 300px;" [formControl]="searchControl">
+        <button class="btn btn-outline-primary" type="button" (click)="searchControl.reset()">Clear</button>
       </form>
-      <app-note></app-note>
+      <button class="btn btn-primary" (click)="openAddNoteModal()">Add Note</button>
     </div>
   </nav>
 
   <div class="row justify-content-center">
-    <app-notes-list></app-notes-list>
+    <app-notes-list [filteredNotes]="(filteredNotes$ | async)!"></app-notes-list>
   </div>
 </div>
+
 
 <router-outlet />

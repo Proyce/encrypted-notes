@@ -1,11 +1,3 @@
-// import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-// import { AsyncPipe, CommonModule, DatePipe, NgFor, NgIf } from '@angular/common';
-// import { Observable } from 'rxjs';
-// import { NotesService } from '../../services/notes.service';
-// import { Note } from '../../interfaces/note';
-// import { ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
-// import { NgbModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NoteModalComponent } from '../note-modal/note-modal.component';

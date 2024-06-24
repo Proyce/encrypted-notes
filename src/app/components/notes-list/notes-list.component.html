@@ -1,14 +1,12 @@
 <div class="container mt-4">
-  <div *ngIf="notes$ | async as notes">
-    <div *ngFor="let note of notes" class="card mb-3">
+  <div *ngIf="filteredNotes.length">
+    <div *ngFor="let note of filteredNotes" class="card mb-3">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0" (click)="openNoteModal(note, 'view')">
-          {{ note.title }}
+          <span>{{ note.title }}</span>
         </h5>
         <div>
-          <button class="btn btn-primary btn-sm me-2" (click)="openNoteModal(note, 'edit')">
-            Edit
-          </button>
+          <button class="btn btn-primary btn-sm me-2" (click)="openNoteModal(note, 'edit')">Edit</button>
           <button class="btn btn-danger btn-sm" (click)="deleteNote(note.id)">Delete</button>
         </div>
       </div>
@@ -18,3 +16,4 @@
     </div>
   </div>
 </div>
+

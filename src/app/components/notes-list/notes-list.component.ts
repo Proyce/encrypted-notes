@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotesService } from '../../services/notes.service';
@@ -14,8 +14,7 @@ import { AsyncPipe, NgFor, CommonModule } from '@angular/common';
   imports: [CommonModule, AsyncPipe, NgFor]
 })
 export class NotesListComponent {
-  notes$: Observable<Note[]> = this.notesService.notes$;
-  isViewMode: boolean = false;
+  @Input() filteredNotes: Note[] = [];
 
   constructor(private notesService: NotesService, private modalService: NgbModal) {}
 
@@ -27,8 +26,7 @@ export class NotesListComponent {
     const modalRef = this.modalService.open(NoteModalComponent);
     modalRef.componentInstance.note = note ? { ...note } : null;
     modalRef.componentInstance.mode = mode;
-    this.isViewMode = mode === 'view';
-    modalRef.componentInstance.isViewMode = this.isViewMode;
+    modalRef.componentInstance.isViewMode = mode === 'view';
   }
 
   truncateContent(content: string): string {
