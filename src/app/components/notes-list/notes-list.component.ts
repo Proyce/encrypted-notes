@@ -5,13 +5,14 @@ import { NotesService } from '../../services/notes.service';
 import { Note } from '../../interfaces/note';
 import { NoteModalComponent } from '../note-modal/note-modal.component';
 import { AsyncPipe, NgFor, CommonModule } from '@angular/common';
+import { SharedMarkdownModule } from '../../shared/markdown.module';
 
 @Component({
   selector: 'app-notes-list',
   standalone: true,
   templateUrl: './notes-list.component.html',
   styleUrls: ['./notes-list.component.css'],
-  imports: [CommonModule, AsyncPipe, NgFor]
+  imports: [CommonModule, AsyncPipe, NgFor, SharedMarkdownModule]
 })
 export class NotesListComponent {
   @Input() filteredNotes: Note[] = [];

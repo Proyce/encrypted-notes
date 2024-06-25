@@ -3,13 +3,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NoteModalComponent } from '../note-modal/note-modal.component';
 import { CommonModule } from '@angular/common';
 import { Note } from '../../interfaces/note';
+import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
   selector: 'app-note',
   standalone: true,
   templateUrl: './note.component.html',
   styleUrls: ['./note.component.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, MarkdownModule]
 })
 export class NoteComponent {
   constructor(private modalService: NgbModal) {}
