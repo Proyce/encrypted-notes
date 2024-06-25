@@ -9,6 +9,7 @@ import { NotesService } from './services/notes.service';
 import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { NoteModalComponent } from './components/note-modal/note-modal.component';
 import { CommonModule } from '@angular/common';
+import { SharedMarkdownModule } from './shared/markdown.module';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     NgbModalModule,
     NoteModalComponent,
+    SharedMarkdownModule
   ],
 
   templateUrl: './app.component.html',
