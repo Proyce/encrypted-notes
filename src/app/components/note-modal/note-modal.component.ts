@@ -89,4 +89,28 @@ export class NoteModalComponent {
       reader.readAsDataURL(file);
     }
   }
+
+  exportNotes(): void {
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(this.notesService.exportNotes());
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute('href', dataStr);
+    downloadAnchorNode.setAttribute('download', 'notes.json');
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  }
+
+  importNotes(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        const json = reader.result as string;
+        this.notesService.importNotes(json);
+        this.activeModal.close();
+      };
+      reader.readAsText(file);
+    }
+  }
 }

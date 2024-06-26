@@ -85,4 +85,14 @@ export class NotesService {
     const note = this.notesSubject.getValue().find(n => n.id === noteId);
     return note ? note.history : [];
   }
+
+  exportNotes(): string {
+    const notes = this.notesSubject.getValue();
+    return JSON.stringify(notes);
+  }
+
+  importNotes(jsonData: string): void {
+    const notes = JSON.parse(jsonData) as Note[];
+    this.saveNotes(notes);
+  }
 }
