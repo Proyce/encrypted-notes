@@ -1,28 +1,54 @@
- <div class="container mt-4">
-
+<div class="container mt-4">
   <div class="mb-4">
-    <input type="file" (change)="importNotes($event)" style="display: none;" #fileInput />
-    <button class="btn btn-primary me-2" (click)="fileInput.click()">Import Notes</button>
-    <button class="btn btn-secondary" (click)="exportNotes()">Export Notes</button>
+    <input
+      type="file"
+      (change)="importNotes($event)"
+      style="display: none"
+      #fileInput
+    />
+    <button class="btn btn-primary me-2" (click)="fileInput.click()">
+      Import Notes
+    </button>
+    <button class="btn btn-secondary" (click)="exportNotes()">
+      Export Notes
+    </button>
   </div>
 
   <div *ngIf="filteredNotes.length">
     <div *ngFor="let note of filteredNotes" class="card mb-3">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <div (click)="openNoteModal(note, 'view')" style="cursor: pointer;">
+      <div
+        class="card-header d-flex justify-content-between align-items-center"
+      >
+        <div (click)="openNoteModal(note, 'view')" style="cursor: pointer">
           <h5 class="mb-0">
             <span>{{ note.title }}</span>
           </h5>
         </div>
         <div>
-          <button class="btn btn-primary btn-sm me-2" (click)="openNoteModal(note, 'edit')">Edit</button>
-          <button class="btn btn-danger btn-sm" (click)="deleteNote(note.id)">Delete</button>
+          <button
+            class="btn btn-primary btn-sm me-2"
+            (click)="openNoteModal(note, 'edit')"
+          >
+            Edit
+          </button>
+          <button class="btn btn-danger btn-sm me-2" (click)="deleteNote(note.id)">
+            Delete
+          </button>
+          <button
+            class="btn btn-success btn-sm me-2"
+            (click)="saveAsPDF(note)"
+          >
+            Save as PDF
+          </button>
+          <button class="btn btn-secondary btn-sm" (click)="print(note)">
+            Print
+          </button>
         </div>
       </div>
       <div class="card-body" (click)="openNoteModal(note, 'view')">
         <markdown [data]="truncateContent(note.content)"></markdown>
         <div *ngIf="note.imageUrl">
-          <img [src]="note.imageUrl" alt="Note Image" class="img-fluid mt-2">
+          <img [src]="note.imageUrl" alt="Note Image" class="img-fluid mt-2" />
         </div>
       </div>
     </div>

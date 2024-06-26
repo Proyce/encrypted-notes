@@ -51,4 +51,12 @@ export class NotesListComponent {
   exportNotes(): void {
     this.notesService.exportNotes();
   }
+
+  saveAsPDF(note: Note): void {
+    this.notesService.saveNoteAsPDF(note);
+  }
+
+  print(note: Note): void {
+    this.notesService.printNote(note);
+  }
 }

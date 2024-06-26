@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Note, NoteVersion } from '../interfaces/note';
 import { EncryptionService } from './encryption.service';
+import jsPDF from 'jspdf';
 
 @Injectable({
   providedIn: 'root',
@@ -111,5 +112,31 @@ export class NotesService {
     a.download = 'notes.json';
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  saveNoteAsPDF(note: Note): void {
+    const doc = new jsPDF();
+    doc.text(note.title, 10, 10);
+    doc.text(note.content, 10, 20);
+    if (note.imageUrl) {
+      doc.addImage(note.imageUrl, 'JPEG', 10, 30, 180, 160);
+    }
+    doc.save(`${note.title}.pdf`);
+  }
+
+  printNote(note: Note): void {
+    const printWindow = window.open('', '', 'width=800,height=600');
+    if (printWindow) {
+      printWindow.document.write('<html><head><title>' + note.title + '</title>');
+      printWindow.document.write('</head><body>');
+      printWindow.document.write('<h1>' + note.title + '</h1>');
+      printWindow.document.write('<pre>' + note.content + '</pre>');
+      if (note.imageUrl) {
+        printWindow.document.write('<img src="' + note.imageUrl + '" style="width:100%;height:auto;"/>');
+      }
+      printWindow.document.write('</body></html>');
+      printWindow.document.close();
+      printWindow.print();
+    }
   }
 }
