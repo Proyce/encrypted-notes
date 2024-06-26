@@ -67,9 +67,6 @@
       <div *ngIf="isViewMode">
         <h5>Markdown Preview</h5>
         <markdown [data]="note.content"></markdown>
-        <div *ngIf="note.imageUrl">
-          <img [src]="note.imageUrl" alt="Note Image" class="img-fluid mt-2" />
-        </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -90,14 +87,4 @@
       </ul>
     </div>
   </form>
-
-  <div class="d-flex justify-content-end mt-3">
-    <button class="btn btn-success me-2" (click)="exportNotes()">
-      Export Notes
-    </button>
-    <label class="btn btn-info" style="margin: 0;">
-      Import Note
-      <input type="file" (change)="importNotes($event)" class="form-control" style="display: none;" />
-    </label>
-  </div>
 </div>

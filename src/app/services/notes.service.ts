@@ -86,13 +86,30 @@ export class NotesService {
     return note ? note.history : [];
   }
 
-  exportNotes(): string {
-    const notes = this.notesSubject.getValue();
-    return JSON.stringify(notes);
+  importNotes(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e.target?.result) {
+        const notes: Note[] = JSON.parse(e.target.result as string);
+        const existingNotes = this.notesSubject.getValue();
+        const combinedNotes = [...notes, ...existingNotes];
+        this.saveNotes(combinedNotes);
+      } else {
+        console.error('Failed to read file or file is empty');
+      }
+    };
+    reader.readAsText(file);
   }
 
-  importNotes(jsonData: string): void {
-    const notes = JSON.parse(jsonData) as Note[];
-    this.saveNotes(notes);
+  exportNotes(): void {
+    const notes = this.notesSubject.getValue();
+    const dataStr = JSON.stringify(notes, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'notes.json';
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }

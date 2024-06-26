@@ -49,6 +49,7 @@ export class NoteModalComponent {
         { value: this.note?.content, disabled: this.isViewMode },
         Validators.required,
       ],
+      imageUrl: [this.note?.imageUrl || '']
     });
 
     if (this.note && this.note.id) {
@@ -67,8 +68,12 @@ export class NoteModalComponent {
   saveNote(): void {
     if (this.noteForm.valid) {
       const noteData = this.noteForm.value;
+      noteData.imageUrl = this.imagePreview as string;
       if (this.note) {
-        this.notesService.updateNote({ ...this.note, ...noteData });
+        this.notesService.updateNote({
+          ...this.note,
+          ...noteData,
+        });
       } else {
         this.notesService.addNote(noteData);
       }
@@ -82,35 +87,9 @@ export class NoteModalComponent {
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result;
-        if (this.note) {
-          this.note.imageUrl = reader.result as string;
-        }
+        this.noteForm.patchValue({ imageUrl: reader.result as string });
       };
       reader.readAsDataURL(file);
-    }
-  }
-
-  exportNotes(): void {
-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(this.notesService.exportNotes());
-    const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute('href', dataStr);
-    downloadAnchorNode.setAttribute('download', 'notes.json');
-    document.body.appendChild(downloadAnchorNode);
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-  }
-
-  importNotes(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        const json = reader.result as string;
-        this.notesService.importNotes(json);
-        this.activeModal.close();
-      };
-      reader.readAsText(file);
     }
   }
 }
