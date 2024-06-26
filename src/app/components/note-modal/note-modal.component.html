@@ -1,48 +1,91 @@
 <div class="modal-header">
-  <h4 *ngIf="!note" class="modal-title">{{ 'Add Note' }}</h4>
-  <h4 *ngIf="note" class="modal-title">{{ isViewMode ? 'View Note' : 'Edit Note' }}</h4>
-  <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+  <h4 *ngIf="!note" class="modal-title">{{ "Add Note" }}</h4>
+  <h4 *ngIf="note" class="modal-title">
+    {{ isViewMode ? "View Note" : "Edit Note" }}
+  </h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="close()"
+  ></button>
 </div>
-<div class="modal-body" style="min-height: 400px;">
+<div class="modal-body" style="min-height: 400px">
   <form [formGroup]="noteForm" (ngSubmit)="saveNote()">
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
-      <input type="text" class="form-control" id="title" formControlName="title" required />
-      <div *ngIf="noteForm.controls['title'].touched && noteForm.controls['title'].hasError('required')"
-        class="invalid-feedback">
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        formControlName="title"
+        required
+      />
+      <div
+        *ngIf="
+          noteForm.controls['title'].touched &&
+          noteForm.controls['title'].hasError('required')
+        "
+        class="invalid-feedback"
+      >
         Title is required.
       </div>
     </div>
     <div class="mb-3">
       <label for="content" class="form-label">Content</label>
-      <textarea class="form-control" id="content" formControlName="content" required style="min-height: 200px;"></textarea>
-      <div *ngIf="noteForm.controls['content'].touched && noteForm.controls['content'].hasError('required')"
-        class="invalid-feedback">
+      <textarea
+        class="form-control"
+        id="content"
+        formControlName="content"
+        required
+        style="min-height: 200px"
+      ></textarea>
+      <div
+        *ngIf="
+          noteForm.controls['content'].touched &&
+          noteForm.controls['content'].hasError('required')
+        "
+        class="invalid-feedback"
+      >
         Content is required.
       </div>
     </div>
-
-
-    <div *ngIf="note">
-      <div *ngIf="!isViewMode">
+    <div class="mb-3">
+      <label for="image" class="form-label">Image</label>
+      <input
+        type="file"
+        class="form-control"
+        id="image"
+        (change)="onFileSelected($event)"
+        [disabled]="isViewMode"
+      />
+      <div *ngIf="imagePreview">
+        <img [src]="imagePreview" alt="Image Preview" class="img-fluid mt-2" />
       </div>
+    </div>
+    <div *ngIf="note">
       <div *ngIf="isViewMode">
         <h5>Markdown Preview</h5>
-          <markdown [data]="note.content"></markdown>
+        <markdown [data]="note.content"></markdown>
+        <div *ngIf="note.imageUrl">
+          <img [src]="note.imageUrl" alt="Note Image" class="img-fluid mt-2" />
+        </div>
       </div>
     </div>
-
-
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
-      <button type="submit" class="btn btn-primary" [disabled]="isViewMode">Save changes</button>
+      <button type="button" class="btn btn-secondary" (click)="close()">
+        Close
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="isViewMode">
+        Save changes
+      </button>
     </div>
-
     <div *ngIf="note && versions.length > 0" class="mb-3">
       <h5>Versions</h5>
       <ul class="list-group">
         <li *ngFor="let version of versions" class="list-group-item">
-          <strong>{{ version.createdAt | date:'short' }}:</strong> {{ version.title }}
+          <strong>{{ version.createdAt | date : "short" }}:</strong>
+          {{ version.title }}
         </li>
       </ul>
     </div>

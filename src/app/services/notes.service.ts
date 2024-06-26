@@ -35,13 +35,15 @@ export class NotesService {
   addNote(noteData: Partial<Note>): void {
     const newNote: Note = {
       id: new Date().getTime().toString(),
-      title: noteData.title || 'New Note',
-      content: noteData.content || '',
+      title: noteData?.title || 'New Note',
+      content: noteData?.content || '',
       createdAt: new Date(),
       updatedAt: new Date(),
       version: 1,
-      history: []
+      history: [],
+      imageUrl: noteData?.imageUrl || '',
     };
+
     const notes = [newNote, ...this.notesSubject.getValue()];
     this.saveNotes(notes);
     this.selectedNoteSubject.next(newNote);
@@ -49,17 +51,17 @@ export class NotesService {
 
   updateNote(updatedNote: Note): void {
     const notes = this.notesSubject.getValue().map(n => {
-      if (n.id === updatedNote.id) {
+      if (n?.id === updatedNote?.id) {
         const newVersion: NoteVersion = {
-          version: n.version,
-          title: n.title,
-          content: n.content,
-          createdAt: n.updatedAt
+          version: n?.version,
+          title: n?.title,
+          content: n?.content,
+          createdAt: n?.updatedAt
         };
         return {
           ...updatedNote,
-          version: n.version + 1,
-          history: [...n.history, newVersion],
+          version: n?.version + 1,
+          history: [...n?.history, newVersion],
           updatedAt: new Date()
         };
       }

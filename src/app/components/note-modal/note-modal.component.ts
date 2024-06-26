@@ -1,5 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotesService } from '../../services/notes.service';
 import { Note, NoteVersion } from '../../interfaces/note';
@@ -9,32 +15,48 @@ import { SharedMarkdownModule } from '../../shared/markdown.module';
 @Component({
   selector: 'app-note-modal',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, SharedMarkdownModule, FormsModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    SharedMarkdownModule,
+    FormsModule,
+  ],
   templateUrl: './note-modal.component.html',
-  styleUrl: './note-modal.component.css'
+  styleUrl: './note-modal.component.css',
 })
 export class NoteModalComponent {
-  @Input() note: Note | null = null;
+  @Input() note!: Note;
   @Input() mode: 'edit' | 'view' = 'view';
+  @Input() isViewMode = true;
   noteForm!: FormGroup;
-  isViewMode: boolean = true;
+  imagePreview: string | ArrayBuffer | null = null;
   versions: NoteVersion[] = [];
 
   constructor(
     public activeModal: NgbActiveModal,
-    private formBuilder: FormBuilder,
-    private notesService: NotesService
+    private notesService: NotesService,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
     this.isViewMode = this.mode === 'view';
-    this.noteForm = this.formBuilder.group({
-      title: [{ value: this.note?.title || '', disabled: this.isViewMode }, Validators.required],
-      content: [{ value: this.note?.content || '', disabled: this.isViewMode }, Validators.required],
+    this.noteForm = this.fb.group({
+      title: [
+        { value: this.note?.title, disabled: this.isViewMode },
+        Validators.required,
+      ],
+      content: [
+        { value: this.note?.content, disabled: this.isViewMode },
+        Validators.required,
+      ],
     });
 
-    if (this.note) {
+    if (this.note && this.note.id) {
       this.versions = this.notesService.getNoteVersions(this.note.id);
+    }
+
+    if (this.note?.imageUrl) {
+      this.imagePreview = this.note.imageUrl;
     }
   }
 
@@ -51,6 +73,20 @@ export class NoteModalComponent {
         this.notesService.addNote(noteData);
       }
       this.activeModal.close();
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+        if (this.note) {
+          this.note.imageUrl = reader.result as string;
+        }
+      };
+      reader.readAsDataURL(file);
     }
   }
 }
