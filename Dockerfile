@@ -13,7 +13,7 @@ RUN npm run build --prod
 
 FROM nginx:stable-alpine
 
-COPY --from=build /app/dist/your-angular-project /usr/share/nginx/html
+COPY --from=build /app/dist/notes-app/browser /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
