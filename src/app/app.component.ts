@@ -11,6 +11,8 @@ import { NoteModalComponent } from './components/note-modal/note-modal.component
 import { CommonModule } from '@angular/common';
 import { SharedMarkdownModule } from './shared/markdown.module';
 
+type SortableKeys = 'title' | 'createdAt' | 'updatedAt';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -22,7 +24,7 @@ import { SharedMarkdownModule } from './shared/markdown.module';
     ReactiveFormsModule,
     NgbModalModule,
     NoteModalComponent,
-    SharedMarkdownModule
+    SharedMarkdownModule,
   ],
 
   templateUrl: './app.component.html',
@@ -30,6 +32,7 @@ import { SharedMarkdownModule } from './shared/markdown.module';
 })
 export class AppComponent {
   searchControl = new FormControl('');
+  sortControl = new FormControl('title-asc');
   filteredNotes$!: Observable<Note[]>;
 
   constructor(
@@ -43,21 +46,46 @@ export class AppComponent {
     this.filteredNotes$ = combineLatest([
       notes$,
       this.searchControl.valueChanges.pipe(startWith('')),
+      this.sortControl.valueChanges.pipe(startWith('title-asc')),
     ]).pipe(
-      map(([notes, searchTerm]) => this.filterNotes(notes || [], searchTerm!))
+      map(([notes, searchTerm, sortCriteria]) =>
+        this.filterAndSortNotes(notes || [], searchTerm!, sortCriteria!)
+      )
     );
   }
 
-  filterNotes(notes: Note[], searchTerm: string): Note[] {
-    if (!searchTerm) {
-      return notes;
+  filterAndSortNotes(
+    notes: Note[],
+    searchTerm: string,
+    sortCriteria: string
+  ): Note[] {
+    let filteredNotes = notes;
+    if (searchTerm) {
+      const lowerCaseTerm = searchTerm.toLowerCase();
+      filteredNotes = filteredNotes.filter(
+        (note) =>
+          note.title.toLowerCase().includes(lowerCaseTerm) ||
+          note.content.toLowerCase().includes(lowerCaseTerm)
+      );
     }
-    const lowerCaseTerm = searchTerm.toLowerCase();
-    return notes.filter(
-      (note) =>
-        note.title.toLowerCase().includes(lowerCaseTerm) ||
-        note.content.toLowerCase().includes(lowerCaseTerm)
-    );
+    return this.sortNotes(filteredNotes, sortCriteria);
+  }
+
+  sortNotes(notes: Note[], criteria: string): Note[] {
+    const [key, order] = criteria.split('-') as [SortableKeys, 'asc' | 'desc'];
+    return notes.sort((a, b) => {
+      let comparison: number;
+
+      if (key === 'title') {
+        comparison = a.title.localeCompare(b.title);
+      } else {
+        const dateA = new Date(a[key]);
+        const dateB = new Date(b[key]);
+        comparison = dateA.getTime() - dateB.getTime();
+      }
+
+      return order === 'asc' ? comparison : -comparison;
+    });
   }
 
   openAddNoteModal(): void {
