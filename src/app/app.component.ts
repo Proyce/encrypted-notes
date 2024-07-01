@@ -32,7 +32,7 @@ type SortableKeys = 'title' | 'createdAt' | 'updatedAt';
 })
 export class AppComponent {
   searchControl = new FormControl('');
-  sortControl = new FormControl('title-asc');
+  sortControl = new FormControl('updatedAt-asc');
   filteredNotes$!: Observable<Note[]>;
 
   constructor(
@@ -46,7 +46,7 @@ export class AppComponent {
     this.filteredNotes$ = combineLatest([
       notes$,
       this.searchControl.valueChanges.pipe(startWith('')),
-      this.sortControl.valueChanges.pipe(startWith('title-asc')),
+      this.sortControl.valueChanges.pipe(startWith('updatedAt-asc')),
     ]).pipe(
       map(([notes, searchTerm, sortCriteria]) =>
         this.filterAndSortNotes(notes || [], searchTerm!, sortCriteria!)
